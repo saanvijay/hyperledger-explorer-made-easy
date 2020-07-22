@@ -62,6 +62,16 @@ func (configInput *ExplorerInput) GenerateDockerCompose() {
 	volumeMap["walletstore"] = ""
 	explorerServices.Volumes = volumeMap
 
+	// External networks
+	var networks Networks
+	var externalMap map[string]External
+	externalMap = make(map[string]External)
+	var external External
+	external.Name = fmt.Sprintf("organizations_%s", configInput.NetworkName)
+	externalMap[configInput.NetworkName] = external
+	networks.External = externalMap
+	explorerServices.Networks = networks
+
 	// Services
 	var explorerServiceMap map[string]ExplorerService
 	explorerServiceMap = make(map[string]ExplorerService)
