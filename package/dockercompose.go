@@ -11,15 +11,15 @@ import (
 
 type ExplorerServices struct {
 	Version  string                     `yaml:"version"`
-	Volumes  map[string]string          `yaml:"volumes"`
-	Networks Networks                   `yaml:"networks"`
+	Volumes  map[string]interface{}     `yaml:"volumes"`
+	Networks map[string]Networks        `yaml:"networks"`
 	Services map[string]ExplorerService `yaml:"services"`
 }
 type External struct {
 	Name string `yaml:"name"`
 }
 type Networks struct {
-	External map[string]External `yaml:"external"`
+	External External `yaml:"external"`
 }
 type Healthcheck struct {
 	Test     string `yaml:"test"`
@@ -56,21 +56,19 @@ func (configInput *ExplorerInput) GenerateDockerCompose() {
 	explorerServices.Version = "2.1"
 
 	//Volumes
-	var volumeMap map[string]string
-	volumeMap = make(map[string]string)
-	volumeMap["pgdata"] = ""
-	volumeMap["walletstore"] = ""
+	var volumeMap map[string]interface{}
+	volumeMap = make(map[string]interface{})
+	volumeMap["pgdata"] = nil
+	volumeMap["walletstore"] = nil
 	explorerServices.Volumes = volumeMap
 
 	// External networks
 	var networks Networks
-	var externalMap map[string]External
-	externalMap = make(map[string]External)
-	var external External
-	external.Name = fmt.Sprintf("organizations_%s", configInput.NetworkName)
-	externalMap[configInput.NetworkName] = external
-	networks.External = externalMap
-	explorerServices.Networks = networks
+	var networkMap map[string]Networks
+	networkMap = make(map[string]Networks)
+	networks.External.Name = fmt.Sprintf("organizations_%s", configInput.NetworkName)
+	networkMap[fmt.Sprintf("%s.com", configInput.NetworkName)] = networks
+	explorerServices.Networks = networkMap
 
 	// Services
 	var explorerServiceMap map[string]ExplorerService
@@ -95,7 +93,7 @@ func (configInput *ExplorerInput) GenerateDockerCompose() {
 		"pgdata:/var/lib/postgresql/data",
 	}
 	explorerService1.Networks = []string{
-		configInput.NetworkName,
+		fmt.Sprintf("%s.com", configInput.NetworkName),
 	}
 	// Explorer Service
 	var explorerService2 ExplorerService
@@ -131,7 +129,7 @@ func (configInput *ExplorerInput) GenerateDockerCompose() {
 	dependsOnMap[fmt.Sprintf("explorerdb.%s.com", configInput.NetworkName)] = dependsOn
 	explorerService2.DependsOn = dependsOnMap
 	explorerService2.Networks = []string{
-		configInput.NetworkName,
+		fmt.Sprintf("%s.com", configInput.NetworkName),
 	}
 
 	explorerServiceMap[fmt.Sprintf("explorerdb.%s.com", configInput.NetworkName)] = explorerService1

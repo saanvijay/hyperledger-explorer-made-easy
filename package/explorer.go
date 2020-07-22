@@ -29,7 +29,7 @@ func (configInput *ExplorerInput) ExplorerDown() {
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		fmt.Println(fmt.Sprint(err) + ":compose down error --------- " + string(output))
-		log.Fatalf(string(output))
+		//	log.Fatalf(string(output))
 	}
 	time.Sleep(30 * time.Second)
 }
@@ -56,15 +56,34 @@ func (configInput *ExplorerInput) LaunchExplorer() {
 	}
 	configInput.ExplorerOutConfigPath = os.Getenv("EXPLORER_OUT_CONFIG_PATH")
 	explorerPath := fmt.Sprintf("%s/%s/explorer", configInput.ExplorerOutConfigPath, configInput.NetworkName)
-	os.MkdirAll(explorerPath, 0664)
-	os.Chdir(explorerPath)
+	err = os.MkdirAll(explorerPath, 0777)
+	if err != nil {
+		fmt.Printf("Unable to create directory : %s\n", err)
+		return
+	}
+	err = os.Chdir(explorerPath)
+	if err != nil {
+		fmt.Printf("Unable to change directory : %s\n", err)
+		return
+	}
 	configInput.GenerateExplorerConfig()
 	configInput.GenerateDockerCompose()
-	os.Mkdir("connection-profile", 0664)
-	os.Chdir("connection-profile")
+	err = os.Mkdir("connection-profile", 0777)
+	if err != nil {
+		fmt.Printf("Unable to create directory : %s\n", err)
+		return
+	}
+	err = os.Chdir("connection-profile")
+	if err != nil {
+		fmt.Printf("Unable to change directory : %s\n", err)
+		return
+	}
 	configInput.GenerateConectionProfile()
-	os.Chdir("..")
-
+	err = os.Chdir("..")
+	if err != nil {
+		fmt.Printf("Unable to change directory : %s\n", err)
+		return
+	}
 	configInput.ExplorerDown()
 	configInput.ExplorerUp()
 
