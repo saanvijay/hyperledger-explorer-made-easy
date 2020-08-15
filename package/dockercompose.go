@@ -66,7 +66,13 @@ func (configInput *ExplorerInput) GenerateDockerCompose() {
 	var networks Networks
 	var networkMap map[string]Networks
 	networkMap = make(map[string]Networks)
-	networks.External.Name = fmt.Sprintf("organizations_%s", configInput.NetworkName)
+	var externalNetworkName string
+	if configInput.ExternalNetworkName != "" {
+		externalNetworkName = configInput.ExternalNetworkName
+	} else {
+		externalNetworkName = fmt.Sprintf("organizations_%s", configInput.NetworkName)
+	}
+	networks.External.Name = externalNetworkName
 	networkMap[fmt.Sprintf("%s.com", configInput.NetworkName)] = networks
 	explorerServices.Networks = networkMap
 

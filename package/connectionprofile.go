@@ -155,7 +155,13 @@ func (configInput *ExplorerInput) GenerateConectionProfile() {
 
 	// CertificateAuthorities Configurations
 	var certificateAuthorities CertificateAuthorities
-	certificateAuthorities.CaName = fmt.Sprintf("%s-ca-server", configInput.Organization)
+	var caName string
+	if configInput.CAName != "" {
+		caName = configInput.CAName
+	} else {
+		caName = fmt.Sprintf("%s-ca-server", configInput.Organization)
+	}
+	certificateAuthorities.CaName = caName
 	var caURL string
 	if configInput.TLSEnable {
 		caURL = fmt.Sprintf("https://%s.ca.com:%d", configInput.Organization, configInput.CAPort)

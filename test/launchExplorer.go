@@ -6,6 +6,7 @@ func main() {
 
 	explorerInput := explorerutils.ExplorerInput{
 		NetworkName:         "testnetwork",
+		ExternalNetworkName: "organizations_testnetwork",
 		ChannelName:         "testchannel",
 		DiscoverAsLocalHost: false,
 		CryptoConfigPath:    "/tmp/testnetwork/crypto-config/",
@@ -16,6 +17,7 @@ func main() {
 		Organization:        "supplier",
 		PeerID:              "peer0.supplier.com",
 		PeerPort:            7051,
+		CAName:              "supplier-ca-server",
 		CAPort:              6054,
 	}
 	explorerInput.LaunchExplorer()

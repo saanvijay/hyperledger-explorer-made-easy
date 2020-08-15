@@ -10,6 +10,7 @@ import (
 
 type ExplorerInput struct {
 	NetworkName           string
+	ExternalNetworkName   string
 	ChannelName           string
 	DiscoverAsLocalHost   bool
 	CryptoConfigPath      string
@@ -20,6 +21,7 @@ type ExplorerInput struct {
 	Organization          string
 	PeerID                string
 	PeerPort              int
+	CAName                string
 	CAPort                int
 	ExplorerOutConfigPath string
 }
