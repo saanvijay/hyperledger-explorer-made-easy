@@ -1,7 +1,9 @@
 package explorerutils
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -46,7 +48,24 @@ func (configInput *ExplorerInput) ExplorerUp() {
 	time.Sleep(30 * time.Second)
 }
 
-func (configInput *ExplorerInput) LaunchExplorer() {
+func LaunchExplorer(jsoninput string) {
+
+	var configInput ExplorerInput
+
+	inputFile, err := os.Open(jsoninput)
+	if err != nil {
+		fmt.Printf("Unable to open the json input file: %s\n", err)
+		return
+	}
+	defer inputFile.Close()
+
+	jsonbytes, _ := ioutil.ReadAll(inputFile)
+
+	err = json.Unmarshal([]byte(jsonbytes), &configInput)
+	if err != nil {
+		fmt.Printf("Unable to unmarshal json %s\n", err)
+		return
+	}
 
 	OriginalDir, err := os.Getwd()
 	if err != nil {
