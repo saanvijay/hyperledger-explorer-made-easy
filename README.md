@@ -11,7 +11,7 @@ hyperledger-explorer-made-easy breaks all those file generation barriers for you
 4. running hyperledger fabric network (supports latest version 2.2 as of now)
 
 # How to test?
-  1. go get github.com/saanvijay/hyperledger-explorer-made-easy/package
+  1. git clone https://github.com/saanvijay/hyperledger-explorer-made-easy.git
   2. Make sure you have running Hyperledger Fabric network
   3. By default all the explorer out files will be generated in "/tmp" dir, but you can set env variable to override it (export EXPLORER_OUT_CONFIG_PATH=/your/explorer/out/path)
   3. Go to test dir and edit input fields as per your requirements and run "go run launchExplorer.go" (wait for couple of mins)
